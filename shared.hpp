@@ -93,12 +93,20 @@ bool shared_ptr<T>::isEmpty() {
 
 template <typename T>
 void shared_ptr<T>::reset(T * ptr) {
+	if (count && *count - 1 > 0) {
+		--*count;
+	}
+	else if (count && *count - 1 == 0) {
+		delete count;
+		delete ptr_;
+	}
+
 	ptr_ = ptr;
-	--*count;
+
 	if (ptr_) {
 		count = new std::size_t(1);
 	}
 	else {
 		count = nullptr;
-	}
+	} 
 }
