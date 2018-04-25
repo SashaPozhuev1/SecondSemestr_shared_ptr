@@ -28,13 +28,22 @@ public:
 		}
 	}
 
-	shared_ptr & operator=(shared_ptr<T> const & other) {
+	shared_ptr & operator=(shared_ptr const & other) {
 		if (ptr_ != other.ptr_) {
+			if (count && *count - 1 > 0) {
+				--*count;
+			}
+			else if (count && *count - 1 == 0) {
+				delete count;
+				delete ptr_;
+			}
 			ptr_ = other.ptr_;
-			--*count;
 			count = other.count;
-			++*count;
+			if (count) {
+				++*count;
+			}
 		}
+		return *this;
 	}
 
 	~shared_ptr() {
